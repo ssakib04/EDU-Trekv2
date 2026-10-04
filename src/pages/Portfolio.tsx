@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useReveal, useScrollTop } from '../hooks/useAnimations';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useScrollTop } from '../hooks/useAnimations';
 
 const PORTFOLIO_ITEMS = [
   { category: 'education', img: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&q=80', tag: 'Study Abroad', title: 'Melbourne, Australia', desc: 'MBA Program Placement' },
@@ -16,57 +17,87 @@ const PORTFOLIO_ITEMS = [
 
 export default function Portfolio() {
   const [filter, setFilter] = useState('all');
-  useReveal();
   useScrollTop();
 
   const filtered = filter === 'all' ? PORTFOLIO_ITEMS : PORTFOLIO_ITEMS.filter(item => item.category === filter);
 
   return (
     <>
-      <header className="page-header">
+      <header className="hero" style={{ minHeight: '60vh', paddingTop: '10rem' }}>
         <div className="container">
-          <h1 className="page-header__title">Our Portfolio</h1>
-          <p className="page-header__breadcrumb"><Link to="/">Home</Link> / Portfolio</p>
+          <motion.div
+            initial={{ opacity: 0, y: 60 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center"
+          >
+            <span className="section__label">Our Portfolio</span>
+            <h1 className="section__title" style={{ fontSize: 'clamp(3rem, 6vw, 5rem)' }}>
+              Success Stories
+            </h1>
+            <p className="section__subtitle">A glimpse of study abroad placements and travel experiences we've delivered</p>
+          </motion.div>
         </div>
       </header>
 
       <section className="section">
         <div className="container">
-          <div className="text-center mb-4 reveal">
-            <span className="section__label">Success Stories</span>
-            <h2 className="section__title">Journeys We've Shaped</h2>
-            <p className="section__subtitle" style={{ margin: '0 auto' }}>A glimpse of study abroad placements and travel experiences we've delivered.</p>
-          </div>
-
-          <div className="portfolio-filters reveal">
-            <button className={`filter-btn ${filter === 'all' ? 'active' : ''}`} onClick={() => setFilter('all')}>All</button>
-            <button className={`filter-btn ${filter === 'education' ? 'active' : ''}`} onClick={() => setFilter('education')}>Study Abroad</button>
-            <button className={`filter-btn ${filter === 'travel' ? 'active' : ''}`} onClick={() => setFilter('travel')}>Travel</button>
-            <button className={`filter-btn ${filter === 'events' ? 'active' : ''}`} onClick={() => setFilter('events')}>Events</button>
-          </div>
-
-          <div className="grid-3">
-            {filtered.map((item, i) => (
-              <article key={i} className="portfolio-item reveal visible">
-                <img src={item.img} alt={item.title} />
-                <div className="portfolio-item__overlay">
-                  <span className="portfolio-item__tag">{item.tag}</span>
-                  <h3>{item.title}</h3>
-                  <p>{item.desc}</p>
-                </div>
-              </article>
+          <motion.div
+            className="portfolio-filters"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            {['all', 'education', 'travel', 'events'].map((f) => (
+              <button
+                key={f}
+                className={`filter-btn ${filter === f ? 'active' : ''}`}
+                onClick={() => setFilter(f)}
+              >
+                {f === 'all' ? 'All' : f === 'education' ? 'Study Abroad' : f.charAt(0).toUpperCase() + f.slice(1)}
+              </button>
             ))}
-          </div>
+          </motion.div>
+
+          <motion.div className="grid-3" layout>
+            <AnimatePresence mode="popLayout">
+              {filtered.map((item, i) => (
+                <motion.article
+                  key={item.title}
+                  className="portfolio-item"
+                  layout
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{ duration: 0.5, delay: i * 0.05 }}
+                  whileHover={{ scale: 1.05 }}
+                >
+                  <img src={item.img} alt={item.title} />
+                  <div className="portfolio-item__overlay">
+                    <span className="portfolio-item__tag">{item.tag}</span>
+                    <h3>{item.title}</h3>
+                    <p>{item.desc}</p>
+                  </div>
+                </motion.article>
+              ))}
+            </AnimatePresence>
+          </motion.div>
         </div>
       </section>
 
       <section className="section">
-        <div className="container reveal">
-          <div className="cta-banner">
+        <div className="container">
+          <motion.div
+            className="cta-banner"
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
             <h2>Want to Be Our Next Success Story?</h2>
             <p>Join hundreds of students and travellers who trusted EDU Trek.</p>
-            <Link to="/register" className="btn btn--white">Get Started</Link>
-          </div>
+            <Link to="/register" className="btn btn--primary">Get Started →</Link>
+          </motion.div>
         </div>
       </section>
     </>

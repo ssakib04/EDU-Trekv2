@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useReveal, useScrollTop } from '../hooks/useAnimations';
+import { motion } from 'framer-motion';
+import { useScrollTop } from '../hooks/useAnimations';
 import { EDU_TREK_CONFIG } from '../config';
 
 export default function Contact() {
-  useReveal();
   useScrollTop();
 
   const [status, setStatus] = useState('');
@@ -17,12 +17,12 @@ export default function Contact() {
 
     if (!EDU_TREK_CONFIG.web3forms?.enabled || EDU_TREK_CONFIG.web3forms.accessKey === 'YOUR_WEB3FORMS_ACCESS_KEY') {
       setStatus('Configure Web3Forms to enable contact emails.');
-      setStatusColor('#92400e');
+      setStatusColor('var(--accent-gold)');
       return;
     }
 
     setStatus('Sending…');
-    setStatusColor('var(--gray)');
+    setStatusColor('var(--text-secondary)');
     try {
       const res = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
@@ -36,84 +36,114 @@ export default function Contact() {
       const json = await res.json();
       if (json.success) {
         setStatus("Message sent! We'll get back to you soon.");
-        setStatusColor('var(--success)');
+        setStatusColor('var(--accent-cyan)');
         form.reset();
       } else throw new Error();
     } catch {
       setStatus('Failed to send. Please try again or email us directly.');
-      setStatusColor('#ef4444');
+      setStatusColor('var(--accent-pink)');
     }
   };
 
   return (
     <>
-      <header className="page-header">
+      <header className="hero" style={{ minHeight: '60vh', paddingTop: '10rem' }}>
         <div className="container">
-          <h1 className="page-header__title">Contact Us</h1>
-          <p className="page-header__breadcrumb"><Link to="/">Home</Link> / Contact</p>
+          <motion.div
+            initial={{ opacity: 0, y: 60 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center"
+          >
+            <span className="section__label">Get in Touch</span>
+            <h1 className="section__title" style={{ fontSize: 'clamp(3rem, 6vw, 5rem)' }}>
+              Contact Us
+            </h1>
+            <p className="section__subtitle">We'd love to hear from you. Reach out anytime.</p>
+          </motion.div>
         </div>
       </header>
 
       <section className="section" style={{ paddingTop: 0 }}>
         <div className="container">
-          <div className="about-split">
-            <div className="reveal">
-              <span className="section__label">Get in Touch</span>
-              <h2 className="section__title">We'd Love to Hear From You</h2>
-              <p className="mb-3">Have questions about studying abroad or planning your next trip? Reach out — our team responds within one business day.</p>
+          <div className="grid-2" style={{ gap: '4rem' }}>
+            <motion.div
+              initial={{ opacity: 0, x: -60 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+            >
+              <h2 className="section__title" style={{ fontSize: '2.5rem' }}>Let's Connect</h2>
+              <p className="mb-4" style={{ color: 'var(--text-secondary)', lineHeight: 1.8 }}>
+                Have questions about studying abroad or planning your next trip? Reach out — our team responds within one business day.
+              </p>
 
-              <div className="card" style={{ marginBottom: '1rem' }}>
-                <div className="card__body" style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
-                  <span style={{ fontSize: '1.5rem' }}>📍</span>
-                  <div>
-                    <h3 className="card__title">Office</h3>
-                    <p className="card__text">Chattogram, Bangladesh<br /><em>(Full address coming soon)</em></p>
+              {[
+                { icon: '📍', title: 'Office', desc: 'Chattogram, Bangladesh' },
+                { icon: '📧', title: 'Email', desc: 'info@edutrektravel.com', link: 'mailto:info@edutrektravel.com' },
+                { icon: '📱', title: 'Phone / WhatsApp', desc: '+8801805513942', link: 'tel:+8801805513942' },
+              ].map((item, i) => (
+                <motion.div
+                  key={i}
+                  className="card mb-3"
+                  initial={{ opacity: 0, x: -40 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: i * 0.1 }}
+                  whileHover={{ scale: 1.02 }}
+                >
+                  <div className="card__body" style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+                    <div className="card__icon" style={{ margin: 0, fontSize: '2rem' }}>{item.icon}</div>
+                    <div>
+                      <h3 className="card__title" style={{ marginBottom: '0.5rem' }}>{item.title}</h3>
+                      {item.link ? (
+                        <a href={item.link} style={{ color: 'var(--accent-cyan)' }}>{item.desc}</a>
+                      ) : (
+                        <p className="card__text">{item.desc}</p>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </div>
-              <div className="card" style={{ marginBottom: '1rem' }}>
-                <div className="card__body" style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
-                  <span style={{ fontSize: '1.5rem' }}>📧</span>
-                  <div>
-                    <h3 className="card__title">Email</h3>
-                    <p className="card__text"><a href="mailto:info@edutrektravel.com">info@edutrektravel.com</a></p>
-                  </div>
-                </div>
-              </div>
-              <div className="card">
-                <div className="card__body" style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
-                  <span style={{ fontSize: '1.5rem' }}>📱</span>
-                  <div>
-                    <h3 className="card__title">Phone / WhatsApp</h3>
-                    <p className="card__text"><a href="tel:+8801805513942">+8801805513942</a></p>
-                  </div>
-                </div>
-              </div>
-            </div>
+                </motion.div>
+              ))}
+            </motion.div>
 
-            <div className="form-card reveal">
-              <h3 className="mb-3">Send a Message</h3>
+            <motion.div
+              className="form-card"
+              initial={{ opacity: 0, x: 60 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <h3 style={{ fontSize: '1.5rem', marginBottom: '2rem', fontFamily: 'var(--font-display)' }}>Send a Message</h3>
               <form onSubmit={handleSubmit}>
                 <div className="form-group">
                   <label htmlFor="contact_name">Name <span className="required">*</span></label>
-                  <input type="text" id="contact_name" name="name" required />
+                  <input type="text" id="contact_name" name="name" required placeholder="Your name" />
                 </div>
                 <div className="form-group">
                   <label htmlFor="contact_email">Email <span className="required">*</span></label>
-                  <input type="email" id="contact_email" name="email" required />
+                  <input type="email" id="contact_email" name="email" required placeholder="you@email.com" />
                 </div>
                 <div className="form-group">
                   <label htmlFor="contact_subject">Subject</label>
-                  <input type="text" id="contact_subject" name="subject" />
+                  <input type="text" id="contact_subject" name="subject" placeholder="What's this about?" />
                 </div>
                 <div className="form-group">
                   <label htmlFor="contact_message">Message <span className="required">*</span></label>
-                  <textarea id="contact_message" name="message" required></textarea>
+                  <textarea id="contact_message" name="message" required placeholder="Tell us what's on your mind…"></textarea>
                 </div>
-                <button type="submit" className="btn btn--primary" style={{ width: '100%' }}>Send Message</button>
-                {status && <p className="hint mt-4" style={{ textAlign: 'center', color: statusColor }}>{status}</p>}
+                <button type="submit" className="btn btn--primary" style={{ width: '100%' }}>Send Message →</button>
+                {status && (
+                  <motion.p
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    style={{ marginTop: '1.5rem', textAlign: 'center', color: statusColor }}
+                  >
+                    {status}
+                  </motion.p>
+                )}
               </form>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>

@@ -75,7 +75,7 @@ export default function Chatbot() {
   return (
     <div className={`chatbot ${open ? 'open' : ''}`}>
       <button className="chatbot__fab" onClick={() => setOpen(!open)} aria-label="Open chat help">
-        <span className="chatbot__fab-dot"></span>Help
+        💬
       </button>
       <div className="chatbot__panel" role="dialog" aria-label="Site help chatbot">
         <div className="chatbot__header">
@@ -98,8 +98,8 @@ export default function Chatbot() {
           </div>
         </div>
         <form className="chatbot__composer" onSubmit={handleSubmit}>
-          <input className="chatbot__input" type="text" placeholder="Type a question… (e.g. how to register?)" autoComplete="off" />
-          <button className="chatbot__send" type="submit">Send</button>
+          <input className="chatbot__input" type="text" placeholder="Type a question…" autoComplete="off" />
+          <button className="chatbot__send" type="submit">→</button>
         </form>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -19,14 +20,26 @@ export default function Navbar() {
 
   const isActive = (path: string) => location.pathname === path;
 
+  const navVariants = {
+    hidden: { y: -100, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1] }
+    }
+  };
+
   return (
-    <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
-      <Link to="/" className="navbar__logo" aria-label="EDU Trek Travel Home">
-        <span className="navbar__logo-badge">
-          <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=100&q=80" alt="EDU Trek Travel" />
-        </span>
-      </Link>
-      <div className="navbar__inner container">
+    <motion.nav
+      className={`navbar ${scrolled ? 'scrolled' : ''}`}
+      variants={navVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      <div className="navbar__inner">
+        <Link to="/" className="navbar__logo">
+          EDU Trek
+        </Link>
         <button
           className={`navbar__toggle ${menuOpen ? 'open' : ''}`}
           aria-label="Toggle menu"
@@ -45,6 +58,6 @@ export default function Navbar() {
           <li><Link to="/register" className={`navbar__cta ${isActive('/register') ? 'active' : ''}`}>Register</Link></li>
         </ul>
       </div>
-    </nav>
+    </motion.nav>
   );
 }

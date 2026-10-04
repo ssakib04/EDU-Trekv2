@@ -6,8 +6,8 @@ export default function Footer() {
       <div className="container">
         <div className="footer__grid">
           <div className="footer__brand">
-            <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=100&q=80" alt="EDU Trek Travel" />
-            <p>Your trusted partner for study abroad consultancy and premium travel experiences.</p>
+            <div className="footer__brand-logo">EDU Trek</div>
+            <p>Your trusted partner for study abroad consultancy and premium travel experiences. We turn dreams into reality.</p>
             <div className="footer__social">
               <a href="https://web.facebook.com/Edutrektravel" aria-label="Facebook">f</a>
               <a href="#" aria-label="Instagram">in</a>

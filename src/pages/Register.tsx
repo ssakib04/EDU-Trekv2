@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useReveal, useScrollTop } from '../hooks/useAnimations';
+import { motion } from 'framer-motion';
+import { useScrollTop } from '../hooks/useAnimations';
 import { EDU_TREK_CONFIG } from '../config';
 
 export default function Register() {
-  useReveal();
   useScrollTop();
 
   const [paymentConfirmed, setPaymentConfirmed] = useState(false);
@@ -54,29 +54,43 @@ export default function Register() {
 
   return (
     <>
-      <header className="page-header">
+      <header className="hero" style={{ minHeight: '60vh', paddingTop: '10rem' }}>
         <div className="container">
-          <h1 className="page-header__title">Register</h1>
-          <p className="page-header__breadcrumb"><Link to="/">Home</Link> / Register</p>
+          <motion.div
+            initial={{ opacity: 0, y: 60 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center"
+          >
+            <span className="section__label">Get Started</span>
+            <h1 className="section__title" style={{ fontSize: 'clamp(3rem, 6vw, 5rem)' }}>
+              Begin Your Journey
+            </h1>
+            <p className="section__subtitle">Fill in your details, complete payment via bKash, and our team will reach out within 24 hours.</p>
+          </motion.div>
         </div>
       </header>
 
       <section className="section">
         <div className="container form-section">
-          <div className="text-center mb-4 reveal">
-            <span className="section__label">Get Started</span>
-            <h2 className="section__title">Begin Your Journey</h2>
-            <p className="section__subtitle" style={{ margin: '0 auto' }}>Fill in your details, complete payment via bKash, and our team will reach out within 24 hours.</p>
-          </div>
-
           {submitted && (
-            <div className="form-card reveal visible mb-3" style={{ textAlign: 'center', border: '2px solid var(--success)' }}>
-              <h3 style={{ color: 'var(--success)', marginBottom: '0.5rem' }}>Registration Complete!</h3>
-              <p style={{ color: 'var(--gray)' }}>Thank you for registering. Our counsellors will contact you soon.</p>
-            </div>
+            <motion.div
+              className="form-card mb-4"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              style={{ textAlign: 'center', border: '2px solid var(--accent-cyan)' }}
+            >
+              <h3 style={{ color: 'var(--accent-cyan)', marginBottom: '1rem', fontSize: '1.5rem' }}>Registration Complete!</h3>
+              <p style={{ color: 'var(--text-secondary)' }}>Thank you for registering. Our counsellors will contact you soon.</p>
+            </motion.div>
           )}
 
-          <div className="form-card reveal">
+          <motion.div
+            className="form-card"
+            initial={{ opacity: 0, y: 60 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
             <form id="registration-form" onSubmit={handleSubmit} noValidate>
               <div className="form-grid">
                 <div className="form-group">
@@ -130,7 +144,7 @@ export default function Register() {
                   </svg>
                   <div>
                     <h3>Registration Fee</h3>
-                    <p style={{ fontSize: '0.9rem', color: 'var(--gray)' }}>Pay securely to confirm your registration</p>
+                    <p style={{ fontSize: '0.9rem', color: 'var(--text-tertiary)' }}>Pay securely to confirm your registration</p>
                   </div>
                 </div>
 
@@ -144,26 +158,31 @@ export default function Register() {
                 <p className="payment-panel__amount">৳{EDU_TREK_CONFIG.registrationFee}</p>
 
                 {statusMsg && (
-                  <div className={`payment-status visible payment-status--${statusType}`} role="status">
+                  <motion.div
+                    className={`payment-status visible payment-status--${statusType}`}
+                    role="status"
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                  >
                     {statusMsg}
-                  </div>
+                  </motion.div>
                 )}
 
-                <button type="button" className="btn btn--bkash" style={{ width: '100%', marginBottom: '1rem' }}
+                <button type="button" className="btn btn--primary" style={{ width: '100%', marginBottom: '1rem', background: '#e2136e' }}
                   onClick={handlePayment} disabled={paymentConfirmed}>
                   {paymentConfirmed ? 'Payment Complete ✓' : 'Pay with bKash'}
                 </button>
 
                 <button type="submit" className="btn btn--primary" style={{ width: '100%' }} disabled={!paymentConfirmed || submitted}>
-                  Submit Registration
+                  Submit Registration →
                 </button>
 
-                <p className="hint" style={{ marginTop: '1rem', textAlign: 'center', fontSize: '0.8rem', color: 'var(--gray)' }}>
+                <p style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.85rem', color: 'var(--text-tertiary)' }}>
                   Complete bKash payment first, then submit. Demo mode is active until merchant credentials are added.
                 </p>
               </div>
             </form>
-          </div>
+          </motion.div>
         </div>
       </section>
     </>

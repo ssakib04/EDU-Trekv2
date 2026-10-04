@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 
 const INTRO_KEY = 'edutrek_intro_seen';
 
@@ -32,7 +33,7 @@ export default function IntroSplash() {
       setHidden(true);
       document.body.classList.remove('no-scroll');
       sessionStorage.setItem(INTRO_KEY, '1');
-    }, 2800);
+    }, 3000);
 
     return () => {
       clearInterval(interval);
@@ -43,30 +44,47 @@ export default function IntroSplash() {
   if (!visible) return null;
 
   return (
-    <div className={`intro-splash ${hidden ? 'hidden' : ''}`} aria-hidden="true">
-      <div className="intro-splash__logo-wrap">
-        <div className="intro-splash__ring"></div>
-        <div className="intro-splash__logo" style={{
-          width: 'min(320px, 85vw)',
-          height: 'auto',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: '2rem',
-          fontWeight: 800,
-          color: '#d4a85a',
-          fontFamily: 'var(--font-display)',
-          textShadow: '0 12px 40px rgba(0,0,0,0.35)',
-        }}>
-          EDU Trek
-        </div>
-      </div>
-      <p className="intro-splash__tagline">Your Vision, Our Direction</p>
-      <p className={`intro-splash__lines intro-splash__lines--in`}>{ITEMS[currentLine]}</p>
-      <p className="intro-splash__text">Loading your journey</p>
+    <motion.div
+      className={`intro-splash ${hidden ? 'hidden' : ''}`}
+      aria-hidden="true"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.8 }}
+    >
+      <motion.div
+        className="intro-splash__logo"
+        initial={{ scale: 0.5, rotateY: 180, filter: 'blur(20px)' }}
+        animate={{ scale: 1, rotateY: 0, filter: 'blur(0px)' }}
+        transition={{ duration: 1.5, ease: [0.34, 1.56, 0.64, 1] }}
+      >
+        EDU Trek
+      </motion.div>
+      <motion.p
+        className="intro-splash__tagline"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5, duration: 0.8 }}
+      >
+        Your Vision, Our Direction
+      </motion.p>
+      <motion.p
+        className="intro-splash__lines"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.8, duration: 0.8 }}
+        key={currentLine}
+      >
+        {ITEMS[currentLine]}
+      </motion.p>
       <div className="intro-splash__bar">
-        <div className="intro-splash__bar-fill"></div>
+        <motion.div
+          className="intro-splash__bar-fill"
+          initial={{ width: '0%' }}
+          animate={{ width: '100%' }}
+          transition={{ duration: 2.5, ease: 'easeInOut' }}
+        />
       </div>
-    </div>
+    </motion.div>
   );
 }
